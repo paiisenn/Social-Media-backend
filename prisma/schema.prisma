@@ -8,18 +8,65 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
+  id        String    @id @default(uuid()) // ← Đổi sang String UUID
+  email     String    @unique
+  password  String
   name      String?
+  avatar    String?
   posts     Post[]
-  createdAt DateTime @default(now())
+  likes     Like[]
+  comments  Comment[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@map("users")
 }
 
 model Post {
-  id        Int      @id @default(autoincrement())
-  title     String
+  id        String      @id @default(uuid()) // ← Đổi sang String UUID
   content   String?
-  authorId  Int
-  author    User     @relation(fields: [authorId], references: [id])
+  videoURL  String?
+  authorId  String // ← Đổi sang String
+  author    User        @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  images    PostImage[]
+  likes     Like[] // ← Thêm relation likes
+  comments  Comment[] // ← Thêm relation comments
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  @@map("posts")
+}
+
+model PostImage {
+  id     String @id @default(uuid()) // ← Đổi sang String UUID và thêm @id
+  url    String
+  postId String // ← Đổi sang String
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@map("post_images")
+}
+
+model Like {
+  id        String   @id @default(uuid())
+  postId    String
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
+
+  @@unique([postId, userId]) // Mỗi user chỉ like 1 lần
+  @@map("likes")
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  content   String
+  postId    String
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("comments")
 }
