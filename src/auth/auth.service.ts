@@ -30,14 +30,8 @@ export class AuthService {
             data: {
                 email: registerDto.email,
                 password: hashedPassword,
-                name: registerDto.name,
-            },
-            select: {
-                id: true,
-                email: true,
-                name: true,
-                avatar: true,
-                createdAt: true,
+                firstName: registerDto.firstName,
+                lastName: registerDto.lastName,
             },
         });
 
