@@ -9,7 +9,7 @@ import { PrismaModule } from '../prisma/prisma.module';
 @Module({
     imports: [
         PrismaModule,
-        PassportModule,
+        PassportModule.register({ defaultStrategy: 'jwt' }),
         JwtModule.register({
             secret: process.env.JWT_SECRET || 'your-secret-key',
             signOptions: { expiresIn: '7d' }, // Token hết hạn sau 7 ngày

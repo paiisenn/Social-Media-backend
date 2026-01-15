@@ -19,7 +19,7 @@ export class AuthController {
     }
 
     @UseGuards(JwtAuthGuard)
-    @Get('profile/:userID')
+    @Get('profile')
     getProfile(@Request() req) {
         return this.authService.getProfile(req.user.id);
     }
